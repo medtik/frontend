@@ -13,5 +13,6 @@ deploy:
   local-dir: dist
   repo: pushresume/pushresume.github.io
   committer-from-gh: true
+  target-branch: master
   on:
     branch: master
