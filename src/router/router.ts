@@ -29,7 +29,7 @@ export const router: Router = new Router({
       component: AuthComponent,
       children: [
         {
-          path: '/provider/:id',
+          path: '/resume',
           name: 'resume',
           component: ResumeProviderComponent,
           props: true,

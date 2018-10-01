@@ -50,13 +50,13 @@ class ProvidersApi {
       .then((result: IGetProviderAuth) => {
         localStorage.setItem('token', result.token);
         commit('setToken', result.token, {root: true});
-        router.push('../provider/' + provider);
+        router.push({name: 'resume'});
         dispatch('refreshToken', result.token, {root: true});
       });
   }
 
   @apiRequest()
-  public getResumes({ commit }: ActionContext<ProvidersState, RootState>, provider): any {
+  public getResumes({ commit }: ActionContext<ProvidersState, RootState>, payload: any): any {
     return Vue.apiService.makeRequest({url: 'resume', auth: true})
       .then((result: IResume[]) => {
         const resumes = result.map((i) => new ResumeModel(i));

@@ -2,10 +2,6 @@
   <v-layout>
     <v-flex>
       <v-card>
-        <v-card-title>
-          Provider: {{id}}
-        </v-card-title>
-
         <v-list two-line>
           <template v-for="(item, index) in resumes">
             <v-list-tile
@@ -46,14 +42,14 @@
 
   @Component({})
   export default class ResumeProvider extends Vue {
-    @Prop() public id!: string;
+    @Prop() public id!: string; // suppose it will be from route params
 
     @providersModule.Getter('resumes') public resumes!: any;
     @Action('getResumes', {namespace: 'providers'}) private getResumes;
     @Action('toggleResume', {namespace: 'providers'}) private toggleResume;
 
     public mounted(): void {
-      this.getResumes(this.id);
+      this.getResumes();
     }
 
     public toggle(id: string): void {

@@ -1,23 +1,19 @@
 export interface IHerokuMax {
+  current: number;
   max: number;
-  total: number;
 }
 
 export interface IProviderStat {
-  [key: string]: number
+  name: string;
+  resume: number;
+  users: number;
 }
 
 export interface IStats {
-  users: {
-    items: IProviderStat[];
-    total: number;
-  },
-  resume: {
-    items: IProviderStat[];
-    total: number;
-  },
-  db: {
-    memory: IHerokuMax;
-    rows: IHerokuMax;
-  }
+  providers: IProviderStat[];
+  health: {
+    cache: IHerokuMax;
+    db: IHerokuMax;
+  };
+  version: string;
 }

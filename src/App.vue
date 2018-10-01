@@ -69,6 +69,7 @@
       if (token) {
         this.setToken(token);
         this.refreshToken(token);
+        router.push({name: 'resume'});
       }
     }
 

@@ -5,9 +5,9 @@
         :rotate="-90"
         :size="100"
         :width="15"
-        :value="stats.memoryUsage"
+        :value="stats.db"
       >
-        memory
+        db
       </v-progress-circular>
 
       <v-list dense subheader v-for="(group, index) in stats.groups" dark>
@@ -26,9 +26,9 @@
         :rotate="-90"
         :size="100"
         :width="15"
-        :value="stats.rowsUsage"
+        :value="stats.cache"
       >
-        rows
+        cache
       </v-progress-circular>
     </v-layout>
   </v-container>

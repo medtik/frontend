@@ -6,18 +6,18 @@ export interface StatsGroupItem {
 }
 
 export interface StatsGroup {
-  label: string;
+  label: 'resume'|'users';
   items: StatsGroupItem[];
 }
 
 export class StatsModel {
-  public readonly memoryUsage: number = 0;
-  public readonly rowsUsage: number = 0;
+  public readonly db: number = 0;
+  public readonly cache: number = 0;
   public readonly groups: StatsGroup[] = [];
   constructor(data?: IStats) {
     if (!data) return;
-    this.memoryUsage = data.db.memory.total/ data.db.memory.max * 100;
-    this.rowsUsage = data.db.rows.total/ data.db.rows.max * 100;
+    this.db = data.health.db.current/ data.health.db.max * 100;
+    this.cache = data.health.cache.current/ data.health.cache.max * 100;
     this.groups.push(this._makeGroup('resume', data));
     this.groups.push(this._makeGroup('users', data));
   }
@@ -27,14 +27,12 @@ export class StatsModel {
       label,
       items: [],
     };
-    if (data[label].items.length) {
-      for(let user of data[label].items) {
-        for(let key in user) {
-          group.items.push({
-            label: key,
-            count: user[key],
-          })
-        }
+    if (data.providers.length) {
+      for(let provider of data.providers) {
+        group.items.push({
+          label: provider.name,
+          count: provider[label],
+        })
       }
     }
     return group;
