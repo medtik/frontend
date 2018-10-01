@@ -5,7 +5,6 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
     "deploy": "npm run build && push-dir --dir=dist --branch=master --remote=deploy --cleanup --force --verbose"
   },
   "dependencies": {
