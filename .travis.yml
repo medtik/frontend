@@ -14,5 +14,6 @@ deploy:
   repo: pushresume/pushresume.github.io
   committer-from-gh: true
   target-branch: master
+  project-name: frontend
   on:
     branch: master
