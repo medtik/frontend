@@ -22,7 +22,7 @@
     </v-navigation-drawer>
 
     <v-content>
-      <v-progress-linear class="loader" v-show="true" :indeterminate="true" height="5" color="primary"></v-progress-linear>
+      <v-progress-linear class="loader" v-show="busy" :indeterminate="true" height="5" color="primary"></v-progress-linear>
       <v-container fluid fill-height>
         <v-fade-transition mode="out-in">
           <router-view />
