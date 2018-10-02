@@ -1,5 +1,5 @@
 <template>
-  <a class="github-fork-ribbon" href="https://github.com/pushresume" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
+  <a class="github-fork-ribbon right-bottom" href="https://github.com/pushresume" data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
 </template>
 
 <script lang="ts">
@@ -66,7 +66,7 @@
     padding: .38em 0;
 
     /* Set the base colour */
-    background-color: #090;
+    background-color: #6d6d6d;
 
     /* Set a gradient: transparent black at the top to almost-transparent black at the bottom */
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.15)));

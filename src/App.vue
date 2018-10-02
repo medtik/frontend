@@ -4,14 +4,12 @@
     <v-toolbar class="grey lighten-5">
       <v-toolbar-side-icon v-on:click="showSidebar = !showSidebar"></v-toolbar-side-icon>
       <v-toolbar-title>
-        <span style="cursor: pointer" v-on:click="toMain()">pushResume</span>
+        pushResume
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <div class="header-right">
-        <v-btn v-on:click="logout()" v-if="isLogged" flat fab>
-          <v-icon>power_settings_new</v-icon>
-        </v-btn>
-      </div>
+      <v-btn v-on:click="logout()" v-if="isLogged" flat fab>
+        <v-icon>power_settings_new</v-icon>
+      </v-btn>
     </v-toolbar>
 
     <v-navigation-drawer
@@ -24,7 +22,7 @@
     </v-navigation-drawer>
 
     <v-content>
-      <v-progress-linear class="loader" v-show="busy" :indeterminate="true" height="5" color="primary"></v-progress-linear>
+      <v-progress-linear class="loader" v-show="true" :indeterminate="true" height="5" color="primary"></v-progress-linear>
       <v-container fluid fill-height>
         <v-fade-transition mode="out-in">
           <router-view />
@@ -81,8 +79,8 @@
       }
     }
 
-    toMain(): void {
-      router.push({name: 'login'});
+    toResume(): void {
+      router.push({name: 'resume'});
     }
   }
 </script>
@@ -91,10 +89,6 @@
   .loader {
     position: absolute;
     top: 0;
-    z-index: 10;
     margin: 0;
-  }
-  .header-right {
-    margin-right: 100px;
   }
 </style>
