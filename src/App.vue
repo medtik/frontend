@@ -2,6 +2,7 @@
   <v-app>
     <GhFork/>
     <v-toolbar class="grey lighten-5">
+      <v-toolbar-side-icon v-on:click="showSidebar = !showSidebar"></v-toolbar-side-icon>
       <v-toolbar-title>
         <span style="cursor: pointer" v-on:click="toMain()">pushResume</span>
       </v-toolbar-title>
@@ -13,6 +14,15 @@
       </div>
     </v-toolbar>
 
+    <v-navigation-drawer
+      v-model="showSidebar"
+      dark class="teal"
+      absolute
+      temporary
+    >
+      <Stats column="true"/>
+    </v-navigation-drawer>
+
     <v-content>
       <v-progress-linear class="loader" v-show="busy" :indeterminate="true" height="5" color="primary"></v-progress-linear>
       <v-container fluid fill-height>
@@ -21,10 +31,6 @@
         </v-fade-transition>
       </v-container>
     </v-content>
-
-    <v-footer height="auto" dark class="teal">
-      <Stats/>
-    </v-footer>
 
     <v-snackbar v-model="showError" :timeout="0">
       {{error}}
@@ -51,6 +57,8 @@
     @Action('removeError') private removeError: any;
     @Action('refreshToken') private refreshToken: any;
     @Action('logout') private logout: any;
+
+    public showSidebar: boolean = false;
 
     public get isLogged(): boolean {
       return !!this.token;
