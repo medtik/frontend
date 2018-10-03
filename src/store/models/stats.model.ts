@@ -14,8 +14,11 @@ export class StatsModel {
   public readonly db: number = 0;
   public readonly cache: number = 0;
   public readonly groups: StatsGroup[] = [];
+  public readonly version: string = null;
+
   constructor(data?: IStats) {
     if (!data) return;
+    this.version = data.version;
     this.db = data.health.db.current/ data.health.db.max * 100;
     this.cache = data.health.cache.current/ data.health.cache.max * 100;
     this.groups.push(this._makeGroup('resume', data));

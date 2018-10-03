@@ -1,7 +1,7 @@
 import {StatsModel} from "../models/stats.model";
 
 export interface RootState {
-  version: string;
+  PACKAGE_JSON: any;
   busy: boolean;
   workers: number[];
   error: string|null;

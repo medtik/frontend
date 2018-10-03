@@ -41,7 +41,7 @@ const storeApi = new StoreApi();
 
 export const store = new Vuex.Store<RootState>({
   state: {
-    version: '1.0.0', // a simple property
+    PACKAGE_JSON: JSON.parse(unescape(process.env.PACKAGE_JSON || '%7B%7D')),
     busy: false,
     workers: [],
     error: null,
@@ -53,6 +53,7 @@ export const store = new Vuex.Store<RootState>({
   },
 
   getters: {
+    version: (state) => state.PACKAGE_JSON.version,
     busy: (state) => state.busy,
     error: (state) => state.error,
     token: (state) => state.token,
@@ -71,7 +72,7 @@ export const store = new Vuex.Store<RootState>({
     },
     setStats(state, value) {
       state.stats = value;
-    }
+    },
   },
 
   actions: {
