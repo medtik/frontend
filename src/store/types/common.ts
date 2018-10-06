@@ -1,4 +1,4 @@
-import {StatsModel} from "../models/stats.model";
+import {StatusModel} from "../models/status.model";
 
 export interface RootState {
   PACKAGE_JSON: any;
@@ -6,5 +6,5 @@ export interface RootState {
   workers: number[];
   error: string|null;
   token: string;
-  stats: StatsModel;
+  status: StatusModel;
 }

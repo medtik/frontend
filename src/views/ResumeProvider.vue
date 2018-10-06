@@ -1,9 +1,12 @@
 <template>
   <v-layout>
     <v-flex>
-      <v-card>
-        <v-list two-line>
-          <template v-for="(item, index) in resumes">
+      <v-card v-for="(provider, i) in providers" :key="provider + i">
+        <v-card-title class="title">
+          {{provider.name}}
+        </v-card-title>
+        <v-list two-line v-if="provider.resumes.length">
+          <template v-for="(item, index) in provider.resumes">
             <v-list-tile
               :key="item.link"
             >
@@ -17,18 +20,21 @@
               </v-list-tile-content>
 
               <v-list-tile-action>
-                <v-switch v-model="item.enabled" v-on:change="toggleResume(item.uniq)"></v-switch>
+                <v-switch v-model="item.enabled" v-on:change="toggleResume(item.identity)"></v-switch>
               </v-list-tile-action>
               <v-list-tile-action-text>
                 Auto update {{ item.enabled ? 'enabled' : 'disabled ' }}
               </v-list-tile-action-text>
             </v-list-tile>
             <v-divider
-              v-if="index !== resumes.length - 1"
+              v-if="index !== provider.resumes.length - 1"
               :key="index"
             ></v-divider>
           </template>
         </v-list>
+        <v-card-text v-else>
+          What are u doing here? U don`t even have any resumes.
+        </v-card-text>
       </v-card>
     </v-flex>
   </v-layout>
@@ -37,6 +43,7 @@
 <script lang="ts">
   import {Component, Prop, Vue} from 'vue-property-decorator';
   import { Action, namespace } from 'vuex-class';
+  import {ProviderModel} from "../store/models/provider.model";
 
   const providersModule = namespace('providers');
 
@@ -44,7 +51,7 @@
   export default class ResumeProvider extends Vue {
     @Prop() public id!: string; // suppose it will be from route params
 
-    @providersModule.Getter('resumes') public resumes!: any;
+    @providersModule.Getter('getProviders') public providers: ProviderModel[];
     @Action('getResumes', {namespace: 'providers'}) private getResumes;
     @Action('toggleResume', {namespace: 'providers'}) private toggleResume;
 
@@ -57,3 +64,9 @@
     }
   }
 </script>
+
+<style scoped>
+  .title {
+    text-transform: uppercase;
+  }
+</style>

@@ -25,8 +25,8 @@ const ProvidersModule = namespace('providers');
 @Component({})
 export default class Login extends Vue {
   busy: boolean = false;
-  @ProvidersModule.Getter('list') public providersList!: ProviderModel[];
-  @Action('getProviders', {namespace: 'providers'}) private getProviders;
+  @ProvidersModule.Getter('getProviders') public providersList!: ProviderModel[];
+  @Action('requestProviders', {namespace: 'providers'}) private requestProviders: any;
   @Action('getProviderRedirect', {namespace: 'providers'}) private getProviderRedirect;
 
   get notLoggedProviders(): ProviderModel[] {
@@ -40,7 +40,7 @@ export default class Login extends Vue {
   }
 
   public mounted(): void {
-    this.getProviders();
+    this.requestProviders();
   }
 
   public login(provider: ProviderModel): void {

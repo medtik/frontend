@@ -13,7 +13,7 @@ export interface IStats {
   providers: IProviderStat[];
   health: {
     cache: IHerokuMax;
-    db: IHerokuMax;
+    database: IHerokuMax;
   };
   version: string;
 }

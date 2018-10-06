@@ -4,7 +4,7 @@ import {providersModule} from './providers.module';
 import {RootState} from './types/common';
 import {apiRequest} from './api-request.decorator';
 import {IGetProviderAuth, IStats} from '../service/interfaces';
-import {StatsModel} from './models/stats.model';
+import {StatusModel} from './models/status.model';
 import {router} from '../router';
 
 Vue.use(Vuex);
@@ -23,10 +23,10 @@ class StoreApi {
   }
 
   @apiRequest()
-  public getStats({ commit }: ActionContext<RootState, RootState>, payload: any): any {
-    return Vue.apiService.makeRequest({url: 'stats'})
+  public getStatus({ commit }: ActionContext<RootState, RootState>, payload: any): any {
+    return Vue.apiService.makeRequest({url: 'status/'})
       .then((response: IStats) => {
-        commit('setStats', new StatsModel(response));
+        commit('setStatus', new StatusModel(response));
       });
   }
 
@@ -46,7 +46,7 @@ export const store = new Vuex.Store<RootState>({
     workers: [],
     error: null,
     token: '',
-    stats: new StatsModel(),
+    status: new StatusModel(),
   },
   modules: {
     providers: providersModule,
@@ -57,7 +57,7 @@ export const store = new Vuex.Store<RootState>({
     busy: (state) => state.busy,
     error: (state) => state.error,
     token: (state) => state.token,
-    stats: (state) => state.stats,
+    status: (state) => state.status,
   },
 
   mutations: {
@@ -70,8 +70,8 @@ export const store = new Vuex.Store<RootState>({
     setToken(state, value) {
       state.token = value;
     },
-    setStats(state, value) {
-      state.stats = value;
+    setStatus(state, value) {
+      state.status = value;
     },
   },
 
@@ -109,6 +109,6 @@ export const store = new Vuex.Store<RootState>({
       localStorage.removeItem('token');
       router.push({name: 'login'});
     },
-    getStats: (...args) => storeApi.getStats(...args),
+    getStatus: (...args) => storeApi.getStatus(...args),
   },
 });

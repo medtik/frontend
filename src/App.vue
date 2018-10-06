@@ -4,7 +4,7 @@
     <v-toolbar class="grey lighten-5">
       <v-toolbar-side-icon v-on:click="showSidebar = !showSidebar"></v-toolbar-side-icon>
       <v-toolbar-title>
-        pushResume
+        <div v-on:click="toLogin()" style="cursor: pointer;">pushResume</div>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-on:click="logout()" v-if="isLogged" flat fab>
@@ -18,7 +18,7 @@
       absolute
       temporary
     >
-      <Stats column="true"/>
+      <Status column="true"/>
     </v-navigation-drawer>
 
     <v-content>
@@ -40,12 +40,12 @@
 <script lang="ts">
   import {Action, Getter, Mutation} from 'vuex-class';
   import {Component, Vue} from 'vue-property-decorator';
-  import Stats from './components/Stats.vue';
+  import Status from './components/Status.vue';
   import GhFork from './components/GhFork.vue';
   import {router} from './router';
 
   @Component({
-    components: {Stats, GhFork}
+    components: {Status, GhFork}
   })
   export default class App extends Vue {
     @Getter('busy') public busy!: boolean;
@@ -79,8 +79,8 @@
       }
     }
 
-    toResume(): void {
-      router.push({name: 'resume'});
+    toLogin(): void {
+      router.push({name: 'login'});
     }
   }
 </script>

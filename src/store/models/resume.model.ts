@@ -4,7 +4,8 @@ export interface IResume {
   name: string;
   published: string|Date;
   title: string;
-  uniq: string;
+  identity: string;
+  photo?: string;
 }
 
 export class ResumeModel implements IResume {
@@ -13,7 +14,8 @@ export class ResumeModel implements IResume {
   public readonly name: string = null;
   public readonly published: string = null;
   public readonly title: string = null;
-  public readonly uniq: string = null;
+  public readonly identity: string = null;
+  public readonly photo: string = null;
 
   public get label(): string {
     return `<b>${this.title}</b> &mdash; ${this.published}`;

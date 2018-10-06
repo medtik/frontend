@@ -1,23 +1,23 @@
 import Vue from 'vue';
 import {Module, ActionContext} from 'vuex';
 import {RootState} from './types/common';
-import {ProviderModel} from './models/provider.model';
+import {IProvider, ProviderModel} from './models/provider.model';
 import {IResume, ResumeModel} from './models/resume.model';
 import {apiRequest} from './api-request.decorator';
 import {IGetProviderRedirect, IGetProviderAuth, IToggleResume} from '../service/interfaces';
 import {router} from '../router';
 
 export interface ProvidersState {
-  list: ProviderModel[];
+  providers: ProviderModel[];
   resumes: ResumeModel[];
 }
 
 class ProvidersApi {
   @apiRequest()
-  public getProviders({ commit }: ActionContext<ProvidersState, RootState>, payload: any): any  {
+  public requestProviders({ commit }: ActionContext<ProvidersState, RootState>, payload: any): any  {
     return Vue.apiService.makeRequest({url: 'auth/providers'})
       .then((result) => {
-        commit('setList', result);
+        commit('setProviders', result);
       });
   }
 
@@ -32,11 +32,11 @@ class ProvidersApi {
   public getProviderRedirect({ commit, state }: ActionContext<ProvidersState, RootState>, provider ): Promise<boolean> {
     return Vue.apiService.makeRequest({url: 'auth/' + provider})
       .then((result: IGetProviderRedirect) => {
-        const current = state.list.find((i) => i.name === provider);
+        const current = state.providers.find((i) => i.name === provider);
         if (current) {
           current.logged = true;
           current.redirectUrl = result.redirect;
-          commit('setList', state.list);
+          commit('setProviders', state.providers);
           window.location.href = result.redirect;
         }
         return true;
@@ -57,18 +57,26 @@ class ProvidersApi {
 
   @apiRequest()
   public getResumes({ commit }: ActionContext<ProvidersState, RootState>, payload: any): any {
-    return Vue.apiService.makeRequest({url: 'resume', auth: true})
-      .then((result: IResume[]) => {
-        const resumes = result.map((i) => new ResumeModel(i));
+    return Vue.apiService.makeRequest({url: 'resume/list', auth: true})
+      .then((result: IProvider) => {
+        const providers: ProviderModel[] = [];
+        for(let key in result) {
+          const provider = new ProviderModel(key);
+          provider.logged = true;
+          provider.resumes = result[key].map((i: IResume) => new ResumeModel(i));
+          providers.push(provider);
+        }
+        commit('setProviders', providers);
+        const resumes = result;
         commit('setResumes', resumes);
       });
   }
 
   @apiRequest()
   public toggleResume({ commit, state }: ActionContext<ProvidersState, RootState>, uniq): any {
-    return Vue.apiService.makeRequest<IToggleResume>({url: 'resume', method: 'POST', auth: true, body: {uniq}})
+    return Vue.apiService.makeRequest<IToggleResume>({url: 'resume/toggle', method: 'POST', auth: true, body: {uniq}})
       .then((result: IToggleResume) => {
-        const current: ResumeModel = state.resumes.find((i: ResumeModel) => i.uniq === uniq);
+        const current: ResumeModel = state.resumes.find((i: ResumeModel) => i.identity === uniq);
         if (current) {
           current.enabled = result.enabled;
           commit('setResumes', state.resumes);
@@ -83,18 +91,18 @@ export const providersModule: Module<ProvidersState, RootState> = {
   namespaced: true,
 
   state: {
-    list: [],
+    providers: [],
     resumes: [],
   },
 
   getters: {
-    list: (state) => state.list,
+    getProviders: (state) => state.providers,
     resumes: (state) => state.resumes,
   },
 
   mutations: {
-    setList(state, value: Array<string|ProviderModel>) {
-      state.list = value.map((i) => new ProviderModel(i));
+    setProviders(state, value: Array<string|ProviderModel>) {
+      state.providers = value.map((i) => new ProviderModel(i));
     },
     setResumes(state, value) {
       state.resumes = value;
@@ -102,7 +110,7 @@ export const providersModule: Module<ProvidersState, RootState> = {
   },
 
   actions: {
-    getProviders: (...args) => providersApi.getProviders(...args),
+    requestProviders: (...args) => providersApi.requestProviders(...args),
     getProviderRedirect: (...args) => providersApi.getProviderRedirect(...args),
     getAuthToken: (...args) => providersApi.getAuthToken(...args),
     getResumes: (...args) => providersApi.getResumes(...args),
