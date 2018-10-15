@@ -7,4 +7,5 @@ export interface RootState {
   error: string|null;
   token: string;
   status: StatusModel;
+  backendVersion: string;
 }

@@ -55,6 +55,7 @@
     @Action('removeError') private removeError: any;
     @Action('refreshToken') private refreshToken: any;
     @Action('logout') private logout: any;
+    @Action('getBackendVersion') private getBackendVersion: any;
 
     public showSidebar: boolean = false;
 
@@ -71,6 +72,13 @@
     }
 
     public mounted(): void {
+      this.getBackendVersion()
+        .then((result) => {
+          if (!result) {
+            this.logout();
+          }
+        });
+
       const token = localStorage.getItem('token');
       if (token) {
         this.setToken(token);

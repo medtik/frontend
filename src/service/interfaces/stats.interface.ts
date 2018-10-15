@@ -4,16 +4,15 @@ export interface IHerokuMax {
 }
 
 export interface IProviderStat {
-  name: string;
+  provider: string;
+  accounts: number;
   resume: number;
-  users: number;
 }
 
 export interface IStats {
-  providers: IProviderStat[];
+  statistics: IProviderStat[];
   health: {
     cache: IHerokuMax;
     database: IHerokuMax;
   };
-  version: string;
 }

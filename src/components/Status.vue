@@ -1,6 +1,10 @@
 <template>
   <v-container fluid fill-height>
     <v-layout align-content-space-between align-center column>
+      <Notifications v-if="token"/>
+
+      <v-spacer></v-spacer>
+
       <v-layout row style="flex-grow: 0">
         <v-list dense subheader v-for="(group, index) in status.groups" dark class="black" :key="group.label+index">
           <v-subheader class="text" dark>{{group.label}}</v-subheader>
@@ -14,8 +18,6 @@
           </v-list-tile>
         </v-list>
       </v-layout>
-
-      <v-spacer></v-spacer>
 
       <div class="version">
         <div>
@@ -49,7 +51,7 @@
           Frontend: {{version}}
         </div>
         <div class="caption white--text">
-          Backend: {{status.version}}
+          Backend: {{backendVersion}}
         </div>
       </div>
     </v-layout>
@@ -60,18 +62,17 @@
   import {Component, Vue} from 'vue-property-decorator';
   import { Action, Getter } from 'vuex-class';
   import {StatusModel} from "../store/models/status.model";
+  import Notifications from './Notifications.vue';
 
   @Component({
     name: 'Status',
-    filters: {
-      numeric(value: any) {
-        return 'Hello filter'
-      }
-    }
+    components: {Notifications}
   })
   export default class Status extends Vue {
     @Getter('version') public version: string;
+    @Getter('backendVersion') public backendVersion: string;
     @Getter('status') public status: StatusModel;
+    @Getter('token') public token: string;
     @Action('getStatus') private getStatus: any;
 
     public numeric(value: number = 0): string {

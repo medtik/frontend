@@ -2,22 +2,24 @@ import Vue from 'vue';
 import {Module, ActionContext} from 'vuex';
 import {RootState} from './types/common';
 import {IProvider, ProviderModel} from './models/provider.model';
-import {IResume, ResumeModel} from './models/resume.model';
 import {apiRequest} from './api-request.decorator';
 import {IGetProviderRedirect, IGetProviderAuth, IToggleResume} from '../service/interfaces';
 import {router} from '../router';
 
 export interface ProvidersState {
   providers: ProviderModel[];
-  resumes: ResumeModel[];
 }
 
 class ProvidersApi {
   @apiRequest()
   public requestProviders({ commit }: ActionContext<ProvidersState, RootState>, payload: any): any  {
     return Vue.apiService.makeRequest({url: 'auth/providers'})
-      .then((result) => {
-        commit('setProviders', result);
+      .then((result: string[]) => {
+        const providers = result.map((i) => new ProviderModel({
+          provider: i,
+          resume: []
+        }));
+        commit('setProviders', providers);
       });
   }
 
@@ -57,29 +59,29 @@ class ProvidersApi {
 
   @apiRequest()
   public getResumes({ commit }: ActionContext<ProvidersState, RootState>, payload: any): any {
-    return Vue.apiService.makeRequest({url: 'resume/list', auth: true})
-      .then((result: IProvider) => {
-        const providers: ProviderModel[] = [];
-        for(let key in result) {
-          const provider = new ProviderModel(key);
-          provider.logged = true;
-          provider.resumes = result[key].map((i: IResume) => new ResumeModel(i));
-          providers.push(provider);
-        }
+    return Vue.apiService.makeRequest({url: 'resume', auth: true})
+      .then((result: IProvider[]) => {
+        const providers: ProviderModel[] = result.map(i => new ProviderModel(i));
         commit('setProviders', providers);
-        const resumes = result;
-        commit('setResumes', resumes);
       });
   }
 
   @apiRequest()
-  public toggleResume({ commit, state }: ActionContext<ProvidersState, RootState>, uniq): any {
-    return Vue.apiService.makeRequest<IToggleResume>({url: 'resume/toggle', method: 'POST', auth: true, body: {uniq}})
+  public toggleResume({ commit, state }: ActionContext<ProvidersState, RootState>, identity): any {
+    return Vue.apiService.makeRequest<IToggleResume>({url: 'resume', method: 'POST', auth: true, body: {identity}})
       .then((result: IToggleResume) => {
-        const current: ResumeModel = state.resumes.find((i: ResumeModel) => i.identity === uniq);
+        const current: ProviderModel = state.providers.find((provider: ProviderModel) => {
+          return !!provider.resumes.find(i => {
+            if (i.identity === identity) {
+              i.enabled = result.enabled;
+              return true;
+            } else {
+              return false;
+            }
+          });
+        });
         if (current) {
-          current.enabled = result.enabled;
-          commit('setResumes', state.resumes);
+          commit('setProviders', state.providers);
         }
       });
   }
@@ -92,20 +94,15 @@ export const providersModule: Module<ProvidersState, RootState> = {
 
   state: {
     providers: [],
-    resumes: [],
   },
 
   getters: {
     getProviders: (state) => state.providers,
-    resumes: (state) => state.resumes,
   },
 
   mutations: {
-    setProviders(state, value: Array<string|ProviderModel>) {
-      state.providers = value.map((i) => new ProviderModel(i));
-    },
-    setResumes(state, value) {
-      state.resumes = value;
+    setProviders(state, value: ProviderModel[]) {
+      state.providers = value;
     },
   },
 

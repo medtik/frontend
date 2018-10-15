@@ -6,15 +6,17 @@ export class ProviderModel {
   public logged: boolean = false;
   public resumes: ResumeModel[] = [];
 
-  constructor(data: string|ProviderModel) {
+  constructor(data: IProvider|ProviderModel) {
     if (data instanceof ProviderModel) {
       Object.assign(this, data);
     } else {
-      this.name = data;
+      this.name = data.provider;
+      this.resumes = data.resume.map(i => new ResumeModel(i));
     }
   }
 }
 
 export interface IProvider {
-  [key: string]: IResume[];
+  provider: string;
+  resume: IResume[];
 }
