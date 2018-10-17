@@ -3,9 +3,26 @@
     <GhFork/>
     <v-toolbar class="grey lighten-5">
       <v-toolbar-side-icon v-on:click="showSidebar = !showSidebar"></v-toolbar-side-icon>
-      <v-toolbar-title>
+      <v-toolbar-title class="mr-3">
         <div v-on:click="toLogin()" style="cursor: pointer;">pushResume</div>
       </v-toolbar-title>
+      <v-toolbar-items>
+        <v-btn flat v-on:click="toFAQ()">FAQ</v-btn>
+        <v-menu offset-y v-if="isLogged && getProviders.length">
+          <v-btn flat slot="activator">
+            Add account
+          </v-btn>
+          <v-list light>
+            <v-list-tile
+              v-for="(item, index) in getProviders"
+              :key="index"
+              @click=""
+            >
+              <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
+      </v-toolbar-items>
       <v-spacer></v-spacer>
       <v-btn v-on:click="logout()" v-if="isLogged" flat fab>
         <v-icon>power_settings_new</v-icon>
@@ -43,6 +60,7 @@
   import Status from './components/Status.vue';
   import GhFork from './components/GhFork.vue';
   import {router} from './router';
+  import {ProviderModel} from "./store/models/provider.model";
 
   @Component({
     components: {Status, GhFork}
@@ -56,6 +74,11 @@
     @Action('refreshToken') private refreshToken: any;
     @Action('logout') private logout: any;
     @Action('getBackendVersion') private getBackendVersion: any;
+    @Getter('getProviders', {namespace: 'providers'}) private providers: ProviderModel[];
+
+    public get getProviders(): ProviderModel[] {
+      return this.providers;
+    }
 
     public showSidebar: boolean = false;
 
@@ -89,6 +112,10 @@
 
     toLogin(): void {
       router.push({name: 'login'});
+    }
+
+    toFAQ(): void {
+      router.push({name: 'faq'});
     }
   }
 </script>

@@ -29,7 +29,7 @@
             :width="15"
             :value="status.database.usage"
           >
-            {{numeric(status.database.current)}} <br>/<br> {{numeric(status.database.max)}}
+            {{numeric(status.database.current)}} / {{numeric(status.database.max)}}
           </v-progress-circular>
         </div>
 
@@ -42,7 +42,7 @@
             :width="15"
             :value="status.cache.usage"
           >
-            {{numeric(status.cache.current)}} <br>/<br> {{numeric(status.cache.max)}}
+            {{numeric(status.cache.current)}} / {{numeric(status.cache.max)}}
           </v-progress-circular>
         </div>
       </div>

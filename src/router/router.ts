@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import LoginComponent from '../views/Login.vue';
 import AuthProviderComponent from '../views/AuthProvider.vue';
 import AuthComponent from '../views/Auth.vue';
+import FAQComponent from '../views/FAQ.vue';
 import ResumeProviderComponent from '../views/ResumeProvider.vue';
 import {authGuard} from './auth';
 
@@ -22,6 +23,12 @@ export const router: Router = new Router({
       name: 'auth',
       component: AuthProviderComponent,
       props: true,
+      meta: {auth: false},
+    },
+    {
+      path: '/faq',
+      name: 'faq',
+      component: FAQComponent,
       meta: {auth: false},
     },
     {

@@ -32,7 +32,9 @@
             ></v-divider>
           </template>
         </v-list>
-        <v-card-text v-else>
+      </v-card>
+      <v-card v-if="!providers.length">
+        <v-card-text>
           What are u doing here? U don`t even have any resumes.
         </v-card-text>
       </v-card>
