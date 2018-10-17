@@ -8,17 +8,17 @@
       </v-toolbar-title>
       <v-toolbar-items>
         <v-btn flat v-on:click="toFAQ()">FAQ</v-btn>
-        <v-menu offset-y v-if="isLogged && getProviders.length">
+        <v-menu offset-y v-if="isLogged && providersList.length">
           <v-btn flat slot="activator">
             Add account
           </v-btn>
           <v-list light>
             <v-list-tile
-              v-for="(item, index) in getProviders"
+              v-for="(provider, index) in providersList"
               :key="index"
-              @click=""
+              @click="loginProvider(provider)"
             >
-              <v-list-tile-title>{{ item.name }}</v-list-tile-title>
+              <v-list-tile-title>{{ provider }}</v-list-tile-title>
             </v-list-tile>
           </v-list>
         </v-menu>
@@ -55,12 +55,14 @@
 </template>
 
 <script lang="ts">
-  import {Action, Getter, Mutation} from 'vuex-class';
+  import {Action, Getter, Mutation, namespace} from 'vuex-class';
   import {Component, Vue} from 'vue-property-decorator';
   import Status from './components/Status.vue';
   import GhFork from './components/GhFork.vue';
   import {router} from './router';
-  import {ProviderModel} from "./store/models/provider.model";
+  import {ProviderModel} from './store/models/provider.model';
+
+  const ProvidersModule = namespace('providers');
 
   @Component({
     components: {Status, GhFork}
@@ -69,16 +71,15 @@
     @Getter('busy') public busy!: boolean;
     @Getter('error') public error!: boolean;
     @Getter('token') public token: string;
+    @Getter('providerCode') public providerCode: string;
     @Mutation('setToken') private setToken: any;
     @Action('removeError') private removeError: any;
     @Action('refreshToken') private refreshToken: any;
     @Action('logout') private logout: any;
     @Action('getBackendVersion') private getBackendVersion: any;
-    @Getter('getProviders', {namespace: 'providers'}) private providers: ProviderModel[];
-
-    public get getProviders(): ProviderModel[] {
-      return this.providers;
-    }
+    @ProvidersModule.Action('getProviders') private getProviders: any;
+    @ProvidersModule.Getter('providersList') public providersList: string[];
+    @ProvidersModule.Action('getAuthToken') private getAuthToken;
 
     public showSidebar: boolean = false;
 
@@ -95,6 +96,8 @@
     }
 
     public mounted(): void {
+      this.getProviders();
+
       this.getBackendVersion()
         .then((result) => {
           if (!result) {
@@ -108,6 +111,10 @@
         this.refreshToken(token);
         router.push({name: 'resume'});
       }
+    }
+
+    loginProvider(provider: string): void {
+      this.getAuthToken({provider, code: this.providerCode});
     }
 
     toLogin(): void {

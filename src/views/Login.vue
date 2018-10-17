@@ -1,7 +1,7 @@
 <template>
   <v-layout v-if="!busy" align-center justify-center>
     <div>
-      <v-btn v-on:click="login(provider)" v-for="provider in notLoggedProviders" :key="provider.name" large color="primary">{{provider.name}}</v-btn>
+      <v-btn v-on:click="login(provider)" v-for="(provider, i) in providersList" :key="provider + i" large color="primary">{{provider}}</v-btn>
     </div>
 
   </v-layout>
@@ -25,27 +25,12 @@ const ProvidersModule = namespace('providers');
 @Component({})
 export default class Login extends Vue {
   busy: boolean = false;
-  @ProvidersModule.Getter('getProviders') public providersList!: ProviderModel[];
-  @Action('requestProviders', {namespace: 'providers'}) private requestProviders: any;
-  @Action('getProviderRedirect', {namespace: 'providers'}) private getProviderRedirect;
+  @ProvidersModule.Getter('providersList') public providersList: string[];
+  @ProvidersModule.Action('getProviderRedirect') private getProviderRedirect;
 
-  get notLoggedProviders(): ProviderModel[] {
-    return this.providersList.filter((i: ProviderModel) => !i.logged);
-  }
-
-  get providersTitle(): string {
-    return this.providersList.length ?
-      (this.notLoggedProviders.length ? 'Please select provider' : 'You already logged in every provider')
-      : 'Unfortunately providers list is empty';
-  }
-
-  public mounted(): void {
-    this.requestProviders();
-  }
-
-  public login(provider: ProviderModel): void {
+  public login(provider: string): void {
     this.busy = true;
-    this.getProviderRedirect(provider.name)
+    this.getProviderRedirect(provider)
       .then((result) => this.busy = result);
   }
 }

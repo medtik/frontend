@@ -1,7 +1,9 @@
 <template>
-  <v-container fluid fill-height>
-    Notifications
-  </v-container>
+  <v-layout>
+    <v-flex>
+      Notifications
+    </v-flex>
+  </v-layout>
 </template>
 
 <script lang="ts">

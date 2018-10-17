@@ -10,22 +10,22 @@
 
 <script lang="ts">
   import {Component, Prop, Vue} from 'vue-property-decorator';
-  import { Action } from 'vuex-class';
+  import { Action, namespace, Mutation } from 'vuex-class';
+  const ProvidersModule = namespace('providers');
 
   @Component({})
   export default class AuthProvider extends Vue {
     @Prop() public id!: string;
     public code: string = '';
-    @Action('getAuthToken', {namespace: 'providers'}) private getAuthToken;
+    @Mutation('setProviderCode') private setProviderCode;
+    @ProvidersModule.Action('getAuthToken') private getAuthToken;
 
     public mounted(): void {
       this.code = this.$route.query.code;
+      this.setProviderCode(this.code);
       if (this.id) {
         this.getAuthToken({provider: this.id, code: this.code});
       }
     }
   }
 </script>
-
-<style scoped>
-</style>

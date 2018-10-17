@@ -56,6 +56,7 @@ export const store = new Vuex.Store<RootState>({
     workers: [],
     error: null,
     token: '',
+    providerCode: null,
     status: new StatusModel(),
     backendVersion: null,
   },
@@ -70,6 +71,7 @@ export const store = new Vuex.Store<RootState>({
     error: (state) => state.error,
     token: (state) => state.token,
     status: (state) => state.status,
+    providerCode: (state) => state.providerCode,
     backendVersion: (state) => state.backendVersion,
   },
 
@@ -82,6 +84,9 @@ export const store = new Vuex.Store<RootState>({
     },
     setToken(state, value) {
       state.token = value;
+    },
+    setProviderCode(state, value) {
+      state.providerCode = value;
     },
     setStatus(state, value) {
       state.status = value;

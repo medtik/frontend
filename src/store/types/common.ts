@@ -6,6 +6,7 @@ export interface RootState {
   workers: number[];
   error: string|null;
   token: string;
+  providerCode: string;
   status: StatusModel;
   backendVersion: string;
 }
