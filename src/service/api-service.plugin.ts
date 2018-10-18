@@ -22,8 +22,9 @@ export class ApiService {
     if (!params.method) {
       params.method = 'GET';
     }
-    if (params.auth) {
-      headers.append('Authorization', `JWT ${localStorage.getItem('token')}`);
+    const token = localStorage.getItem('token');
+    if (token) {
+      headers.append('Authorization', `JWT ${token}`);
     }
     const response = await fetch(
       CONFIG.apiUrl + params.url,

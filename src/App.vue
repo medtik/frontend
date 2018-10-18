@@ -79,7 +79,7 @@
     @Action('getBackendVersion') private getBackendVersion: any;
     @ProvidersModule.Action('getProviders') private getProviders: any;
     @ProvidersModule.Getter('providersList') public providersList: string[];
-    @ProvidersModule.Action('getAuthToken') private getAuthToken;
+    @ProvidersModule.Action('getProviderRedirect') private getProviderRedirect;
 
     public showSidebar: boolean = false;
 
@@ -114,11 +114,15 @@
     }
 
     loginProvider(provider: string): void {
-      this.getAuthToken({provider, code: this.providerCode});
+      this.getProviderRedirect(provider);
     }
 
     toLogin(): void {
-      router.push({name: 'login'});
+      if (this.isLogged) {
+        router.push({name: 'resume'});
+      } else {
+        router.push({name: 'login'});
+      }
     }
 
     toFAQ(): void {
