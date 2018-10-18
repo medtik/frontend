@@ -33,7 +33,7 @@
           </template>
         </v-list>
       </v-card>
-      <v-card v-if="error">
+      <v-card v-if="!providers.length && requestMade">
         <v-card-text>
           What are u doing here? U don`t even have any resumes.
         </v-card-text>
@@ -44,13 +44,13 @@
 
 <script lang="ts">
   import {Component, Prop, Vue} from 'vue-property-decorator';
-  import { Action, namespace } from 'vuex-class';
+  import {namespace} from 'vuex-class';
   import {ProviderModel} from '../store/models/provider.model';
   const ProvidersModule = namespace('providers');
 
   @Component({})
   export default class ResumeProvider extends Vue {
-    public error: boolean = false;
+    public requestMade: boolean = false;
     @Prop() public id!: string; // suppose it will be from route params
 
     @ProvidersModule.Getter('providers') public providers: ProviderModel[];
@@ -59,8 +59,8 @@
 
     public mounted(): void {
       this.getResumes()
-        .catch(() => {
-          this.error = true;
+        .finally(() => {
+          this.requestMade = true;
         });
     }
 
